@@ -11,8 +11,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # 基本设置
 include(Options)
-include(CompilerSettings)
 print_config()
+include(CompilerSettings)
 
 # 下载安装依赖库
 include(UseOpenSSL)
