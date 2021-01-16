@@ -36,6 +36,9 @@ namespace dev {
 // 将字节数组转换为Base64编码的字符串（标准base64字符集）
 std::string toBase64Std(BytesConstRef bs);
 
+// 将字节数组转换为Base64编码的字符串（对url合法的base64字符集）
+std::string toBase64URL(BytesConstRef bs);
+
 // /**
 //  * 将Base64编码的字符串转换为字节数组
 //  * @param base64 Base64编码的字符串（标准字符集）
@@ -43,9 +46,6 @@ std::string toBase64Std(BytesConstRef bs);
 //  * @throw 遇到非法Base64字符抛出BadBase64Ch异常
 //  */
 // Bytes fromBase64STD(const std::string& base64);
-
-// // 将字节数组转换为Base64编码的字符串（对url合法的base64字符集）
-// std::string toBase64URL(BytesConstRef bs);
 
 // /**
 //  * 将Base64编码的字符串转换为字节数组
