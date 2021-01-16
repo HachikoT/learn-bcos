@@ -43,11 +43,11 @@ static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
         b = 0xff;
     }
     for (int i = 0; i < 16; ++i) {
-        goodDecodeMap[encodeMap[i]] = i;
+        goodDecodeMap[(Byte)encodeMap[i]] = i;
     }
     encodeMap = "0123456789ABCDEF";
     for (int i = 0; i < 16; ++i) {
-        goodDecodeMap[encodeMap[i]] = i;
+        goodDecodeMap[(Byte)encodeMap[i]] = i;
     }
     for (int i = 0; i < 256; ++i) {
         if (goodDecodeMap[i] != decodeMap[i]) {
@@ -103,7 +103,7 @@ std::string toHex0x(BytesConstRef bs) {
  * @throw 遇到非法16进制字符抛出BadHexCh异常
  */
 Bytes fromHex(const std::string& hex) {
-    assert(checkDecodeMap(s_encodeMap, s_decodeMap));
+    // assert(checkDecodeMap(s_encodeMap, s_decodeMap));
 
     // 跳过0x开头
     size_t endCh = hex.size();
@@ -115,7 +115,7 @@ Bytes fromHex(const std::string& hex) {
 
     // 奇数个字符，先处理一个
     if (endCh % 2) {
-        Byte l = s_decodeMap[hex[curCh++]];
+        Byte l = s_decodeMap[(Byte)hex[curCh++]];
         if (l == 0xff) {
             throw BadHexCh();
         }
@@ -124,8 +124,8 @@ Bytes fromHex(const std::string& hex) {
 
     // 每两个字符转换为一个字节
     while (curCh != endCh) {
-        int h = s_decodeMap[hex[curCh++]];
-        int l = s_decodeMap[hex[curCh++]];
+        int h = s_decodeMap[(Byte)hex[curCh++]];
+        int l = s_decodeMap[(Byte)hex[curCh++]];
         if (h == 0xff || l == 0xff) {
             throw BadHexCh();
         }

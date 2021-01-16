@@ -68,7 +68,7 @@ static bool checkDecodeMapStd() {
         decodeMap[i] = 0xff;
     }
     for (int i = 0; i < 64; ++i) {
-        decodeMap[s_encodeMapStd[i]] = i;
+        decodeMap[(Byte)s_encodeMapStd[i]] = i;
     }
     for (int i = 0; i < 256; ++i) {
         if (s_encodeMapStd[i] != decodeMap[i]) {

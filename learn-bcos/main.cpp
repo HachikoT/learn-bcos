@@ -1,12 +1,12 @@
 #include <iostream>
-#include "Base64.h"
+#include <libdevcore/Base64.h>
 
 int main(int argc, char const *argv[])
 {
     (void)argc;
     (void)argv;
 
-    std::cout << dev::toBase64Std() << std::endl;
+    std::cout << dev::toBase64Std(dev::Bytes()) << std::endl;
 
     return 0;
 }
