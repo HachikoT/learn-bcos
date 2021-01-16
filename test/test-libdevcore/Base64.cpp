@@ -32,24 +32,24 @@ BOOST_AUTO_TEST_CASE(fromBase64Test)
 {
     // 空字符串
     std::string emptyStr;
-    BOOST_CHECK(BytesConstRef(fromBase64STD(emptyStr)).toString() == "");
+    BOOST_CHECK(BytesConstRef(fromBase64Std(emptyStr)).toString() == "");
     BOOST_CHECK(BytesConstRef(fromBase64URL(emptyStr)).toString() == "");
 
     // 3N长输出
     std::string str0 = "aGVsbG8gYmFzZTY0";
-    BOOST_CHECK(BytesConstRef(fromBase64STD(str0)).toString() == "hello base64");
+    BOOST_CHECK(BytesConstRef(fromBase64Std(str0)).toString() == "hello base64");
     BOOST_CHECK(BytesConstRef(fromBase64URL(str0)).toString() == "hello base64");
 
     // 3N+1长输出
     std::string str1Std = "aGVsbG8gYmFzZTY0/w==";
     std::string str1URL = "aGVsbG8gYmFzZTY0_w==";
-    BOOST_CHECK(BytesConstRef(fromBase64STD(str1Std)).toString() == "hello base64\xff");
+    BOOST_CHECK(BytesConstRef(fromBase64Std(str1Std)).toString() == "hello base64\xff");
     BOOST_CHECK(BytesConstRef(fromBase64URL(str1URL)).toString() == "hello base64\xff");
 
     // 3N+2长输出
     std::string str2Std = "aGVsbG8gYmFzZTY0/+8=";
     std::string str2URL = "aGVsbG8gYmFzZTY0_-8=";
-    BOOST_CHECK(BytesConstRef(fromBase64STD(str2Std)).toString() == "hello base64\xff\xef");
+    BOOST_CHECK(BytesConstRef(fromBase64Std(str2Std)).toString() == "hello base64\xff\xef");
     BOOST_CHECK(BytesConstRef(fromBase64URL(str2URL)).toString() == "hello base64\xff\xef");
 
     // 非法输入
@@ -59,11 +59,11 @@ BOOST_AUTO_TEST_CASE(fromBase64Test)
     std::string str4N2URL = "aGVsbG8gYmFzZTY0_-";
     std::string str4N3STD = "aGVsbG8gYmFzZTY0/+8";
     std::string str4N3URL = "aGVsbG8gYmFzZTY0_-8";
-    BOOST_CHECK_THROW(fromBase64STD(str4N1STD), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64Std(str4N1STD), BadBase64Ch);
     BOOST_CHECK_THROW(fromBase64URL(str4N1URL), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64STD(str4N2STD), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64Std(str4N2STD), BadBase64Ch);
     BOOST_CHECK_THROW(fromBase64URL(str4N2URL), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64STD(str4N3STD), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64Std(str4N3STD), BadBase64Ch);
     BOOST_CHECK_THROW(fromBase64URL(str4N3URL), BadBase64Ch);
 }
 
