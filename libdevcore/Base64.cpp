@@ -93,22 +93,22 @@ static const Byte s_decodeMapURL[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
-// 测试decodeMap是否设置正确
-static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
-    Byte goodDecodeMap[256];
-    for (auto& b : goodDecodeMap) {
-        b = 0xff;
-    }
-    for (int i = 0; i < 64; ++i) {
-        goodDecodeMap[(Byte)encodeMap[i]] = i;
-    }
-    for (int i = 0; i < 256; ++i) {
-        if (goodDecodeMap[i] != decodeMap[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+// // 测试decodeMap是否设置正确
+// static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
+//     Byte goodDecodeMap[256];
+//     for (auto& b : goodDecodeMap) {
+//         b = 0xff;
+//     }
+//     for (int i = 0; i < 64; ++i) {
+//         goodDecodeMap[(Byte)encodeMap[i]] = i;
+//     }
+//     for (int i = 0; i < 256; ++i) {
+//         if (goodDecodeMap[i] != decodeMap[i]) {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
 
 static std::string base64Encode(BytesConstRef bs, const char* encodeMap, char paddingCh) {
     // 提前分配好内存
@@ -189,7 +189,7 @@ std::string toBase64URL(BytesConstRef bs) {
  * @throw 遇到非法Base64字符抛出BadBase64Ch异常
  */
 Bytes fromBase64Std(const std::string& base64) {
-    assert(checkDecodeMap(s_encodeMapStd, s_decodeMapStd));
+    // assert(checkDecodeMap(s_encodeMapStd, s_decodeMapStd));
 
     return base64Decode(base64, s_decodeMapStd, s_paddingChStd);
 }
@@ -201,7 +201,7 @@ Bytes fromBase64Std(const std::string& base64) {
  * @throw 遇到非法Base64字符抛出BadBase64Ch异常
  */
 Bytes fromBase64URL(const std::string& base64) {
-    assert(checkDecodeMap(s_encodeMapURL, s_decodeMapURL));
+    // assert(checkDecodeMap(s_encodeMapURL, s_decodeMapURL));
 
     return base64Decode(base64, s_decodeMapURL, s_paddingChURL);
 }
