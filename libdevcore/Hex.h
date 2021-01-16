@@ -22,7 +22,7 @@ std::string toHex(BytesConstRef bs);
  * @param bs 字节数组
  * @return 对应的16进制字符串
  */
-std::string toHexPrefixed(BytesConstRef bs);
+std::string toHex0x(BytesConstRef bs);
 
 /**
  * 将16进制字符串转换为字节数组
