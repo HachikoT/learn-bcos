@@ -69,8 +69,8 @@ std::string toHex(BytesConstRef bs) {
     // 每一个字节转换为两个字符
     size_t off = 0;
     for (auto b : bs) {
-        ret[off++] = encodeMap[(b >> 4) & 0x0f];
-        ret[off++] = encodeMap[b & 0x0f];
+        ret[off++] = s_encodeMap[(b >> 4) & 0x0f];
+        ret[off++] = s_encodeMap[b & 0x0f];
     }
 
     return ret;
@@ -89,8 +89,8 @@ std::string toHex0x(BytesConstRef bs) {
     // 每一个字节转换为两个字符
     size_t off = 2;
     for (auto b : bs) {
-        ret[off++] = encodeMap[(b >> 4) & 0x0f];
-        ret[off++] = encodeMap[b & 0x0f];
+        ret[off++] = s_encodeMap[(b >> 4) & 0x0f];
+        ret[off++] = s_encodeMap[b & 0x0f];
     }
 
     return ret;
