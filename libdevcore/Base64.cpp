@@ -93,29 +93,29 @@ static const Byte s_decodeMapURL[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
-// // 测试decodeMap是否设置正确
-// static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
-//     Byte goodDecodeMap[256];
-//     for (auto& b : goodDecodeMap) {
-//         b = 0xff;
-//     }
-//     for (int i = 0; i < 64; ++i) {
-//         goodDecodeMap[(Byte)encodeMap[i]] = i;
-//     }
-//     for (int i = 0; i < 256; ++i) {
-//         if (goodDecodeMap[i] != decodeMap[i]) {
-//             return false;
-//         }
-//     }
-//     return true;
-// }
+// 测试decodeMap是否设置正确
+static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
+    Byte goodDecodeMap[256];
+    for (auto& b : goodDecodeMap) {
+        b = 0xff;
+    }
+    for (int i = 0; i < 64; ++i) {
+        goodDecodeMap[(Byte)encodeMap[i]] = i;
+    }
+    for (int i = 0; i < 256; ++i) {
+        if (goodDecodeMap[i] != decodeMap[i]) {
+            return false;
+        }
+    }
+    return true;
+}
 
 static std::string base64Encode(BytesConstRef bs, const char* encodeMap, char paddingCh) {
     // 提前分配好内存
     auto len = bs.size();
     std::string ret((len + 2) / 3 * 4, '\0');
 
-    // 每3个字节转换为4个Base64字符，不足的补填充字符
+    // 每3个字节转换为4个字符，不足的补填充字符
     for (size_t i = 0, off = 0; i < len; i += 3) {
         ret[off++] = encodeMap[(bs[i] & 0xfc) >> 2];
         if (i + 1 < len) {
@@ -137,6 +137,41 @@ static std::string base64Encode(BytesConstRef bs, const char* encodeMap, char pa
     return ret;
 }
 
+static Bytes base64Decode(const std::string& base64, const Byte* decodeMap, char paddingCh) {
+    // 提前分配内存
+    auto len = base64.size();
+    Bytes ret((len + 3) / 4 * 3);
+
+    // 每4个字符转换为3个字节
+    size_t off = 0;
+    for (size_t i = 0; i < len; i += 4) {
+        Byte one = decodeMap[(Byte)base64[i]];
+        // C++11标准保证str[str.size()]为'\0'，所以当输入不是4N长度时就会抛出BadBase64Ch异常
+        Byte two = decodeMap[(Byte)base64[i + 1]];
+        if (one == 0xff || two == 0xff) {
+            throw BadBase64Ch();
+        }
+        ret[off++] = (one << 2) + ((two & 0x30) >> 4);
+        if (base64[i + 2] != paddingCh) {
+            Byte three = decodeMap[(Byte)base64[i + 2]];
+            if (three == 0xff) {
+                throw BadBase64Ch();
+            }
+            ret[off++] = ((two & 0x0f) << 4) + ((three & 0x3c) >> 2);
+            if (base64[i + 3] != paddingCh) {
+                Byte four = decodeMap[(Byte)base64[i + 3]];
+                if (four == 0xff) {
+                    throw BadBase64Ch();
+                }
+                ret[off++] = ((three & 0x03) << 6) + four;
+            }
+        }
+    }
+
+    ret.resize(off);
+    return ret;
+}
+
 // 将字节数组转换为Base64编码的字符串（标准base64字符集）
 std::string toBase64Std(BytesConstRef bs) {
     return base64Encode(bs, s_encodeMapStd, s_paddingChStd);
@@ -145,6 +180,30 @@ std::string toBase64Std(BytesConstRef bs) {
 // 将字节数组转换为Base64编码的字符串（对url合法的base64字符集）
 std::string toBase64URL(BytesConstRef bs) {
     return base64Encode(bs, s_encodeMapURL, s_paddingChURL);
+}
+
+/**
+ * 将Base64编码的字符串转换为字节数组
+ * @param base64 Base64编码的字符串（标准字符集）
+ * @return 对应的字节数组
+ * @throw 遇到非法Base64字符抛出BadBase64Ch异常
+ */
+Bytes fromBase64Std(const std::string& base64) {
+    assert(checkDecodeMap(s_encodeMapStd, s_decodeMapStd));
+
+    return base64Decode(base64, s_decodeMapStd, s_paddingChStd);
+}
+
+/**
+ * 将Base64编码的字符串转换为字节数组
+ * @param base64 Base64编码的字符串（对url合法的字符集）
+ * @return 对应的字节数组
+ * @throw 遇到非法Base64字符抛出BadBase64Ch异常
+ */
+Bytes fromBase64URL(const std::string& base64) {
+    assert(checkDecodeMap(s_encodeMapURL, s_decodeMapURL));
+
+    return base64Decode(base64, s_decodeMapURL, s_paddingChURL);
 }
 
 }   // namespace dev
