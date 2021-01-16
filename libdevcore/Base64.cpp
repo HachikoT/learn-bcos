@@ -31,6 +31,7 @@
 
 namespace dev {
 
+// 编解码表（Std）
 static const char s_paddingChStd = '=';
 static const char s_encodeMapStd[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                      "abcdefghijklmnopqrstuvwxyz"
@@ -61,17 +62,17 @@ static const Byte s_decodeMapStd[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
-// 测试s_decodeMapStd是否设置正确
-static bool checkDecodeMapStd() {
-    Byte decodeMap[256];
-    for (int i = 0; i < 256; ++i) {
-        decodeMap[i] = 0xff;
+// 测试decodeMap是否设置正确
+static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
+    Byte goodDecodeMap[256];
+    for (auto& b : goodDecodeMap) {
+        b = 0xff;
     }
     for (int i = 0; i < 64; ++i) {
-        decodeMap[(Byte)s_encodeMapStd[i]] = i;
+        goodDecodeMap[(Byte)encodeMap[i]] = i;
     }
     for (int i = 0; i < 256; ++i) {
-        if (s_encodeMapStd[i] != decodeMap[i]) {
+        if (goodDecodeMap[i] != decodeMap[i]) {
             return false;
         }
     }
@@ -80,7 +81,7 @@ static bool checkDecodeMapStd() {
 
 // 将字节数组转换为Base64编码的字符串（标准base64字符集）
 std::string toBase64Std(BytesConstRef bs) {
-    return checkDecodeMapStd() ? "ok" : "error";
+    return checkDecodeMapStd(s_encodeMapStd, s_decodeMapStd) ? "ok" : "error";
 }
 
 }   // namespace dev

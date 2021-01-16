@@ -36,26 +36,26 @@ static const Byte s_decodeMap[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
-// 测试decodeMap是否设置正确
-static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
-    Byte goodDecodeMap[256];
-    for (auto& b : goodDecodeMap) {
-        b = 0xff;
-    }
-    for (int i = 0; i < 16; ++i) {
-        goodDecodeMap[(Byte)encodeMap[i]] = i;
-    }
-    encodeMap = "0123456789ABCDEF";
-    for (int i = 0; i < 16; ++i) {
-        goodDecodeMap[(Byte)encodeMap[i]] = i;
-    }
-    for (int i = 0; i < 256; ++i) {
-        if (goodDecodeMap[i] != decodeMap[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+// // 测试decodeMap是否设置正确
+// static bool checkDecodeMap(const char* encodeMap, const Byte* decodeMap) {
+//     Byte goodDecodeMap[256];
+//     for (auto& b : goodDecodeMap) {
+//         b = 0xff;
+//     }
+//     for (int i = 0; i < 16; ++i) {
+//         goodDecodeMap[(Byte)encodeMap[i]] = i;
+//     }
+//     encodeMap = "0123456789ABCDEF";
+//     for (int i = 0; i < 16; ++i) {
+//         goodDecodeMap[(Byte)encodeMap[i]] = i;
+//     }
+//     for (int i = 0; i < 256; ++i) {
+//         if (goodDecodeMap[i] != decodeMap[i]) {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
 
 /**
  * 将字节数组转换为16进制字符串（小写，不带前缀0x）
@@ -124,8 +124,8 @@ Bytes fromHex(const std::string& hex) {
 
     // 每两个字符转换为一个字节
     while (curCh != endCh) {
-        int h = s_decodeMap[(Byte)hex[curCh++]];
-        int l = s_decodeMap[(Byte)hex[curCh++]];
+        Byte h = s_decodeMap[(Byte)hex[curCh++]];
+        Byte l = s_decodeMap[(Byte)hex[curCh++]];
         if (h == 0xff || l == 0xff) {
             throw BadHexCh();
         }
