@@ -31,3 +31,5 @@ macro(print_config)
     message("------------------------------------------------------------------------")
     message("")
 endmacro()
+
+print_config()

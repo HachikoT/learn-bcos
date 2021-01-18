@@ -1,12 +1,12 @@
 #include <iostream>
-#include <libdevcore/Base64.h>
+#include <libconfig/Version.h>
 
 int main(int argc, char const *argv[])
 {
     (void)argc;
     (void)argv;
 
-    std::cout << dev::toBase64Std(dev::Bytes()) << std::endl;
+    dev::printVersion();
 
     return 0;
 }

@@ -1,0 +1,16 @@
+/**
+ * 项目构建信息宏定义
+ * @file: BuildInfo.h
+ * @author: rancheng <rc4work@163.com>
+ * @date: 2021-01-16
+ */
+#pragma once
+
+#define PROJECT_NAME "@PROJECT_NAME@"
+#define PROJECT_VERSION "@PROJECT_VERSION@@VERSION_SUFFIX@"
+#define TAEGET_PLATFORM "@CMAKE_SYSTEM_NAME@"
+#define COMPILER "@CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@"
+#define BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+#define BUILD_TIME "@BUILD_TIME@"
+#define GIT_BRANCH "@GIT_BRANCH@"
+#define GIT_COMMIT "@GIT_COMMIT@"

@@ -11,7 +11,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # 基本设置
 include(Options)
-print_config()
+include(BuildInfo)
 include(CompilerSettings)
 
 # 下载安装依赖库
@@ -20,6 +20,7 @@ include(ProjectBoost)
 
 # 添加子目录
 add_subdirectory(libdevcore)
+add_subdirectory(libconfig)
 add_subdirectory(${PROJECT_NAME})
 
 # 构建并运行单元测试
