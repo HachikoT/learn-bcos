@@ -17,6 +17,7 @@ include(CompilerSettings)
 # 下载安装依赖库
 include(UseOpenSSL)
 include(ProjectBoost)
+include(ProjectJSONCPP)
 
 # 添加子目录
 add_subdirectory(libdevcore)

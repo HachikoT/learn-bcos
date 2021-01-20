@@ -53,7 +53,7 @@ ExternalProject_Add(boost
 # boost库头文件目录和库目录
 ExternalProject_Get_Property(boost SOURCE_DIR)
 set(BOOST_INCLUDE_DIR ${SOURCE_DIR})
-set(BOOST_LIBRARY_PREFIX ${SOURCE_DIR}/stage/lib/${CMAKE_STATIC_LIBRARY_PREFIX})
+set(BOOST_LIBRARY_PRE ${SOURCE_DIR}/stage/lib/${CMAKE_STATIC_LIBRARY_PREFIX}boost_)
 
 # Boost::Algorithm库
 add_library(Boost::Algorithm INTERFACE IMPORTED GLOBAL)
@@ -70,7 +70,7 @@ add_dependencies(Boost::ASIO boost)
 # Boost::DateTime库
 add_library(Boost::DateTime STATIC IMPORTED GLOBAL)
 set_property(TARGET Boost::DateTime PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${BOOST_INCLUDE_DIR})
-set_property(TARGET Boost::DateTime PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PREFIX}boost_date_time${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_property(TARGET Boost::DateTime PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PRE}date_time${CMAKE_STATIC_LIBRARY_SUFFIX})
 set_property(TARGET Boost::DateTime PROPERTY INTERFACE_LINK_LIBRARIES Boost::Serialization)
 add_dependencies(Boost::DateTime boost)
 
@@ -87,25 +87,25 @@ add_dependencies(Boost::Multiprecision boost)
 # Boost::Regex库
 add_library(Boost::Regex STATIC IMPORTED GLOBAL)
 set_property(TARGET Boost::Regex PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${BOOST_INCLUDE_DIR})
-set_property(TARGET Boost::Regex PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PREFIX}boost_regex${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_property(TARGET Boost::Regex PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PRE}regex${CMAKE_STATIC_LIBRARY_SUFFIX})
 add_dependencies(Boost::Regex boost)
 
 # Boost::Serialization库
 add_library(Boost::Serialization STATIC IMPORTED GLOBAL)
 set_property(TARGET Boost::Serialization PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${BOOST_INCLUDE_DIR})
-set_property(TARGET Boost::Serialization PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PREFIX}boost_serialization${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_property(TARGET Boost::Serialization PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PRE}serialization${CMAKE_STATIC_LIBRARY_SUFFIX})
 add_dependencies(Boost::Serialization boost)
 
 # Boost::System库
 add_library(Boost::System STATIC IMPORTED GLOBAL)
 set_property(TARGET Boost::System PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${BOOST_INCLUDE_DIR})
-set_property(TARGET Boost::System PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PREFIX}boost_system${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_property(TARGET Boost::System PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PRE}system${CMAKE_STATIC_LIBRARY_SUFFIX})
 add_dependencies(Boost::System boost)
 
 # Boost::UnitTestFramework库
 add_library(Boost::UnitTestFramework STATIC IMPORTED GLOBAL)
 set_property(TARGET Boost::UnitTestFramework PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${BOOST_INCLUDE_DIR})
-set_property(TARGET Boost::UnitTestFramework PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PREFIX}boost_unit_test_framework${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_property(TARGET Boost::UnitTestFramework PROPERTY IMPORTED_LOCATION ${BOOST_LIBRARY_PRE}unit_test_framework${CMAKE_STATIC_LIBRARY_SUFFIX})
 add_dependencies(Boost::UnitTestFramework boost)
 
 # 取消临时定义
