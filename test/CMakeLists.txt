@@ -1,6 +1,6 @@
 # 获取源文件和头文件列表
-file(GLOB_RECURSE SRCS "*.cpp")
-file(GLOB_RECURSE HEADERS "*.h")
+file(GLOB_RECURSE SRCS "unittests/*.cpp")
+file(GLOB_RECURSE HEADERS "unittests/*.h")
 
 # 添加可执行目标
 add_executable(test-${PROJECT_NAME} ${SRCS} ${HEADERS})
