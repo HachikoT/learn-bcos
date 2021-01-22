@@ -57,82 +57,76 @@ static const Byte s_decodeMap[] = {
 //     return true;
 // }
 
-/**
- * 将字节数组转换为16进制字符串（小写，不带前缀0x）
- * @param bs 字节数组
- * @return 对应的16进制字符串
- */
-std::string toHex(BytesConstRef bs) {
+// 将字节数组转换为16进制字符串（小写，不带前缀0x）
+std::string toHex(BytesConstRef src) {
     // 提前分配好内存
-    std::string ret(bs.size() * 2, '\0');
+    std::string dst(src.size() * 2, '\0');
 
     // 每一个字节转换为两个字符
-    size_t off = 0;
-    for (auto b : bs) {
-        ret[off++] = s_encodeMap[(b >> 4) & 0x0f];
-        ret[off++] = s_encodeMap[b & 0x0f];
+    size_t dstIdx = 0;
+    for (auto b : src) {
+        dst[dstIdx + 0] = s_encodeMap[(b >> 4) & 0x0f];
+        dst[dstIdx + 1] = s_encodeMap[b & 0x0f];
+        dstIdx += 2;
     }
 
-    return ret;
+    return dst;
 }
 
-/**
- * 将字节数组转换为16进制字符串（小写，带前缀0x）
- * @param bs 字节数组
- * @return 对应的16进制字符串
- */
-std::string toHex0x(BytesConstRef bs) {
+// 将字节数组转换为16进制字符串（小写，带前缀0x）
+std::string toHex0x(BytesConstRef src) {
     // 提前分配好内存
-    std::string ret = "0x";
-    ret.resize(bs.size() * 2 + 2);
+    std::string dst = "0x";
+    dst.resize(src.size() * 2 + 2);
 
     // 每一个字节转换为两个字符
-    size_t off = 2;
-    for (auto b : bs) {
-        ret[off++] = s_encodeMap[(b >> 4) & 0x0f];
-        ret[off++] = s_encodeMap[b & 0x0f];
+    size_t dstIdx = 2;
+    for (auto b : src) {
+        dst[dstIdx + 0] = s_encodeMap[(b >> 4) & 0x0f];
+        dst[dstIdx + 1] = s_encodeMap[b & 0x0f];
+        dstIdx += 2;
     }
 
-    return ret;
+    return dst;
 }
 
 /**
  * 将16进制字符串转换为字节数组
- * @param hex 16进制字符串（允许前缀0x或0X，不允许空白符）
+ * @param src 16进制字符串（允许前缀0x或0X，不允许空白符）
  * @return 对应的字节数组
  * @throw 遇到非法16进制字符抛出BadHexCh异常
  */
-Bytes fromHex(const std::string& hex) {
+Bytes fromHex(const std::string& src) {
     // assert(checkDecodeMap(s_encodeMap, s_decodeMap));
 
     // 跳过0x开头
-    size_t endCh = hex.size();
-    size_t curCh = endCh >= 2 && hex[0] == '0' && tolower(hex[1]) == 'x' ? 2 : 0;
+    size_t srcLen = src.size();
+    size_t srcIdx = srcLen >= 2 && src[0] == '0' && tolower(src[1]) == 'x' ? 2 : 0;
 
     // 提前分配好内存
-    Bytes ret((endCh - curCh + 1) / 2);
-    size_t curByte = 0;
+    Bytes dst((srcLen - srcIdx + 1) / 2);
+    size_t dstIdx = 0;
 
     // 奇数个字符，先处理一个
-    if (endCh % 2) {
-        Byte l = s_decodeMap[(Byte)hex[curCh++]];
+    if (srcLen % 2) {
+        Byte l = s_decodeMap[(Byte)src[srcIdx++]];
         if (l == 0xff) {
             throw BadHexCh();
         }
-        ret[curByte++] = l;
+        dst[dstIdx++] = l;
     }
 
     // 每两个字符转换为一个字节
-    while (curCh != endCh) {
-        Byte h = s_decodeMap[(Byte)hex[curCh++]];
-        Byte l = s_decodeMap[(Byte)hex[curCh++]];
+    while (srcIdx != srcLen) {
+        Byte h = s_decodeMap[(Byte)src[srcIdx++]];
+        Byte l = s_decodeMap[(Byte)src[srcIdx++]];
         if (h == 0xff || l == 0xff) {
             throw BadHexCh();
         }
-        ret[curByte++] = h << 4 | l;
+        dst[dstIdx++] = h << 4 | l;
     }
 
-    return ret;
+    return dst;
 }
 
 }   // namespace dev

@@ -35,36 +35,72 @@ BOOST_AUTO_TEST_CASE(fromBase64Test)
     BOOST_CHECK(BytesConstRef(fromBase64Std(emptyStr)).toString() == "");
     BOOST_CHECK(BytesConstRef(fromBase64URL(emptyStr)).toString() == "");
 
-    // 3N长输出
+    // 4N长输入
     std::string str0 = "aGVsbG8gYmFzZTY0";
     BOOST_CHECK(BytesConstRef(fromBase64Std(str0)).toString() == "hello base64");
     BOOST_CHECK(BytesConstRef(fromBase64URL(str0)).toString() == "hello base64");
 
-    // 3N+1长输出
-    std::string str1Std = "aGVsbG8gYmFzZTY0/w==";
-    std::string str1URL = "aGVsbG8gYmFzZTY0_w==";
-    BOOST_CHECK(BytesConstRef(fromBase64Std(str1Std)).toString() == "hello base64\xff");
-    BOOST_CHECK(BytesConstRef(fromBase64URL(str1URL)).toString() == "hello base64\xff");
+    // 4N+1长输入
+    std::string str1Std = "aGVsbG8gYmFzZTY0/";
+    std::string str1URL = "aGVsbG8gYmFzZTY0_";
+    BOOST_CHECK_THROW(fromBase64Std(str1Std), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64URL(str1URL), BadBase64Ch);
 
-    // 3N+2长输出
-    std::string str2Std = "aGVsbG8gYmFzZTY0/+8=";
-    std::string str2URL = "aGVsbG8gYmFzZTY0_-8=";
-    BOOST_CHECK(BytesConstRef(fromBase64Std(str2Std)).toString() == "hello base64\xff\xef");
-    BOOST_CHECK(BytesConstRef(fromBase64URL(str2URL)).toString() == "hello base64\xff\xef");
+    // 4N+2长输入
+    std::string str2Std = "aGVsbG8gYmFzZTY0/w";
+    std::string str2URL = "aGVsbG8gYmFzZTY0_w";
+    BOOST_CHECK(BytesConstRef(fromBase64Std(str2Std)).toString() == "hello base64\xff");
+    BOOST_CHECK(BytesConstRef(fromBase64URL(str2URL)).toString() == "hello base64\xff");
+
+    // 4N+3长输入
+    std::string str3Std = "aGVsbG8gYmFzZTY0/+8";
+    std::string str3URL = "aGVsbG8gYmFzZTY0_-8";
+    BOOST_CHECK(BytesConstRef(fromBase64Std(str3Std)).toString() == "hello base64\xff\xef");
+    BOOST_CHECK(BytesConstRef(fromBase64URL(str3URL)).toString() == "hello base64\xff\xef");
+
+    // 4N+2长输入，但是最后两个字符是非法字符
+    std::string str2Fault1Std = "aGVsbG8gYmFzZTY0?w";
+    std::string str2Fault1URL = "aGVsbG8gYmFzZTY0?w";
+    BOOST_CHECK_THROW(fromBase64Std(str2Fault1Std), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64URL(str2Fault1URL), BadBase64Ch);
+
+    // 4N+2长输入，但是最后两个字符是非法字符
+    std::string str2Fault2Std = "aGVsbG8gYmFzZTY0/?";
+    std::string str2Fault2URL = "aGVsbG8gYmFzZTY0_?";
+    BOOST_CHECK_THROW(fromBase64Std(str2Fault2Std), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64URL(str2Fault2URL), BadBase64Ch);
+
+    // 4N+3长输入，但是最后三个字符是非法字符
+    std::string str3Fault1Std = "aGVsbG8gYmFzZTY0?+8";
+    std::string str3Fault1URL = "aGVsbG8gYmFzZTY0?-8";
+    BOOST_CHECK_THROW(fromBase64Std(str3Fault1Std), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64URL(str3Fault1URL), BadBase64Ch);
+
+    // 4N+3长输入，但是最后三个字符是非法字符
+    std::string str3Fault2Std = "aGVsbG8gYmFzZTY0/?8";
+    std::string str3Fault2URL = "aGVsbG8gYmFzZTY0_?8";
+    BOOST_CHECK_THROW(fromBase64Std(str3Fault2Std), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64URL(str3Fault2URL), BadBase64Ch);
+
+    // 4N+3长输入，但是最后三个字符是非法字符
+    std::string str3Fault3Std = "aGVsbG8gYmFzZTY0/+?";
+    std::string str3Fault3URL = "aGVsbG8gYmFzZTY0_-?";
+    BOOST_CHECK_THROW(fromBase64Std(str3Fault3Std), BadBase64Ch);
+    BOOST_CHECK_THROW(fromBase64URL(str3Fault3URL), BadBase64Ch);
 
     // 非法输入
-    std::string str4N1STD = "aGVsbG8gYmFzZTY0/";
-    std::string str4N1URL = "aGVsbG8gYmFzZTY0_";
-    std::string str4N2STD = "aGVsbG8gYmFzZTY0/+";
-    std::string str4N2URL = "aGVsbG8gYmFzZTY0_-";
-    std::string str4N3STD = "aGVsbG8gYmFzZTY0/+8";
-    std::string str4N3URL = "aGVsbG8gYmFzZTY0_-8";
-    BOOST_CHECK_THROW(fromBase64Std(str4N1STD), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64URL(str4N1URL), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64Std(str4N2STD), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64URL(str4N2URL), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64Std(str4N3STD), BadBase64Ch);
-    BOOST_CHECK_THROW(fromBase64URL(str4N3URL), BadBase64Ch);
+    // std::string str4N1STD = "aGVsbG8gYmFzZTY0/";
+    // std::string str4N1URL = "aGVsbG8gYmFzZTY0_";
+    // std::string str4N2STD = "aGVsbG8gYmFzZTY0/+";
+    // std::string str4N2URL = "aGVsbG8gYmFzZTY0_-";
+    // std::string str4N3STD = "aGVsbG8gYmFzZTY0/+8";
+    // std::string str4N3URL = "aGVsbG8gYmFzZTY0_-8";
+    // BOOST_CHECK_THROW(fromBase64Std(str4N1STD), BadBase64Ch);
+    // BOOST_CHECK_THROW(fromBase64URL(str4N1URL), BadBase64Ch);
+    // BOOST_CHECK_THROW(fromBase64Std(str4N2STD), BadBase64Ch);
+    // BOOST_CHECK_THROW(fromBase64URL(str4N2URL), BadBase64Ch);
+    // BOOST_CHECK_THROW(fromBase64Std(str4N3STD), BadBase64Ch);
+    // BOOST_CHECK_THROW(fromBase64URL(str4N3URL), BadBase64Ch);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
