@@ -149,20 +149,18 @@ static Bytes base64Decode(const std::string& src, const Byte* decodeMap, char pa
             throw BadBase64Ch();
         }
         if (three == 0xff || four == 0xff) {
-            dst[dstIdx++] = (one << 2) + ((two & 0x30) >> 4);
+            dst[dstIdx++] = one << 2 | (two & 0x30) >> 4;
             if (src[srcIdx + 2] != paddingCh) {
                 if (three == 0xff) {
                     throw BadBase64Ch();
                 }
-                dst[dstIdx++] = ((two & 0x0f) << 4) + ((three & 0x3c) >> 2);
+                dst[dstIdx++] = (two & 0x0f) << 4 | (three & 0x3c) >> 2;
                 if (src[srcIdx + 3] != paddingCh) {
-                    if (four == 0xff) {
-                        throw BadBase64Ch();
-                    }
-                    dst[dstIdx++] = ((three & 0x03) << 6) + four;
+                    throw BadBase64Ch();
                 }
             }
         } else {
+            // 绝大部分都是这种情况，单独拿出来优化一下效率
             uint32_t ui24 = ((uint32_t)one) << 18 | ((uint32_t)two) << 12 | ((uint32_t)three) << 6 | ((uint32_t)four);
 
             dst[dstIdx + 0] = ui24 >> 16;
