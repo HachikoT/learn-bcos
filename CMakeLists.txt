@@ -2,9 +2,11 @@
 cmake_minimum_required(VERSION 3.7)
 
 # 项目信息
-project(learn-bcos
-        VERSION 1.0.0
-        LANGUAGES CXX)
+project(
+    learn-bcos
+    VERSION 1.0.0
+    LANGUAGES CXX
+)
 
 # 添加模块目录（CMAKE_CURRENT_SOURCE_DIR表示当前CMakeList.txt的路径）
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -15,7 +17,6 @@ include(BuildInfo)
 include(CompilerSettings)
 
 # 下载安装依赖库
-include(UseOpenSSL)
 include(ProjectBoost)
 include(ProjectJSONCPP)
 

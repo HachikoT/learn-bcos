@@ -3,11 +3,15 @@ include(ExternalProject)
 include(GNUInstallDirs)
 
 # 下载安装依赖库
-ExternalProject_Add(jsoncpp
+ExternalProject_Add(
+    # 项目名称
+    jsoncpp
     # 项目根目录
     PREFIX ${CMAKE_SOURCE_DIR}/deps
     # 下载名
     DOWNLOAD_NAME jsoncpp-1.9.4.tar.gz
+    # 下载路径
+    DOWNLOAD_DIR ${CMAKE_SOURCE_DIR}/deps/download
     # 下载链接（支持多源下载）
     URL https://github.com/open-source-parsers/jsoncpp/archive/1.9.4.tar.gz
     # sha256哈希值校验

@@ -6,5 +6,6 @@ file(GLOB HEADERS "*.h")
 add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
 
 # 添加依赖库
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::ProgramOptions)
 target_link_libraries(${PROJECT_NAME} PUBLIC devcore)
 target_link_libraries(${PROJECT_NAME} PUBLIC config)

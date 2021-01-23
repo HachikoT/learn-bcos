@@ -15,10 +15,12 @@ if (("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MA
         find_program(LCOV_TOOL lcov)
         message(STATUS "lcov tool: ${LCOV_TOOL}")
         if (LCOV_TOOL)
-            add_custom_target(coverage
+            add_custom_target(
+                coverage
                 COMMAND ${LCOV_TOOL} -o ${CMAKE_BINARY_DIR}/coverage.info.in -c -d ${CMAKE_BINARY_DIR}/
                 COMMAND ${LCOV_TOOL} -r ${CMAKE_BINARY_DIR}/coverage.info.in '/usr*' '${CMAKE_SOURCE_DIR}/deps*' '${CMAKE_SOURCE_DIR}/test*' -o ${CMAKE_BINARY_DIR}/coverage.info
-                COMMAND genhtml -q -o ${CMAKE_BINARY_DIR}/CodeCoverage ${CMAKE_BINARY_DIR}/coverage.info)
+                COMMAND genhtml -q -o ${CMAKE_BINARY_DIR}/CodeCoverage ${CMAKE_BINARY_DIR}/coverage.info
+            )
         else()
             message(FATAL_ERROR "Can't find lcov tool. Please install lcov")
         endif()
