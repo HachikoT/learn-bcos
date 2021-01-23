@@ -71,11 +71,7 @@ using S512 = boost::multiprecision::number<boost::multiprecision::cpp_int_backen
     boost::multiprecision::signed_magnitude, boost::multiprecision::unchecked, void>>;
 
 //------------------------------------编解码------------------------------------//
-/**
- * 忽略前导0，计算无符号整型占用多少字节内存
- * @param u 无符号整型
- * @return 占用多少字节内存（可以为0）
- */
+// 忽略前导0，计算无符号整型占用多少字节内存
 template<typename T>
 unsigned bytesRequired(T u) noexcept {
     static_assert(
@@ -91,11 +87,7 @@ unsigned bytesRequired(T u) noexcept {
     return br;
 }
 
-/**
- * 将无符号整型序列化为字节数组（大端序）
- * @param u 无符号整型
- * @param bs 用于保存结果的字节数组引用
- */
+// 将无符号整型序列化为字节数组（大端序）
 template<typename T>
 void toBigEndian(T u, BytesRef bs) noexcept {
     static_assert(
@@ -109,11 +101,7 @@ void toBigEndian(T u, BytesRef bs) noexcept {
     }
 }
 
-/**
- * 将字节数组反序列化为无符号整型（大端序）
- * @param bs 大端序字节数组常量引用
- * @return 主机序的整型
- */
+// 将字节数组反序列化为无符号整型（大端序）
 template<typename T>
 T fromBigEndian(BytesConstRef bs) {
     static_assert(

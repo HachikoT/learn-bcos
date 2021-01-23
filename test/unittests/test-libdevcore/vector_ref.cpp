@@ -7,7 +7,7 @@ namespace dev { namespace test {
 
 BOOST_AUTO_TEST_SUITE(VectorRefTests)
 
-BOOST_AUTO_TEST_CASE(constructor)
+BOOST_AUTO_TEST_CASE(constructorTest)
 {
     // 默认构造函数
     vector_ref<int> emptyRef;
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(constructor)
     BOOST_CHECK(constArrRef2.data() == &constArr[0] && constArrRef2.size() == 3);
 }
 
-BOOST_AUTO_TEST_CASE(cropped)
+BOOST_AUTO_TEST_CASE(croppedTest)
 {
     // 空数组引用
     vector_ref<int> emptyRef;
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(cropped)
     BOOST_CHECK_THROW(arrRef.cropped(arrRef.size() + 1), OutOfRange);
 }
 
-BOOST_AUTO_TEST_CASE(toString)
+BOOST_AUTO_TEST_CASE(toStringTest)
 {
     std::string str = "hello world";
     vector_ref<char> strRef(str);
