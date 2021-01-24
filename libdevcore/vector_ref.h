@@ -14,6 +14,7 @@
 #include <string>
 #include <type_traits>
 #include <cstddef>
+#include <cstring>
 #include "Exceptions.h"
 
 namespace dev {
@@ -41,6 +42,10 @@ public:
     // 通过字符串构造
     vector_ref(std::string& str) noexcept
     : vector_ref(reinterpret_cast<pointer>(&str[0]), str.size() / sizeof(T)) {}
+    vector_ref(char* cstr) noexcept
+    : vector_ref(reinterpret_cast<pointer>(cstr), strlen(cstr) / sizeof(T)) {}
+    vector_ref(const char* cstr) noexcept
+    : vector_ref(reinterpret_cast<pointer>(cstr), strlen(cstr) / sizeof(T)) {}
 
     // 通过POD容器构造
     template<typename Container, typename std::enable_if<std::is_pod<typename Container::value_type>::value, int>::type = 0>

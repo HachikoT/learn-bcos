@@ -30,6 +30,17 @@ BOOST_AUTO_TEST_CASE(constructorTest)
     BOOST_CHECK(constStrRef2.data() == &constStr[0] && constStrRef2.size() == constStr.size());
     BOOST_CHECK(constStrRef3.data() == &rvalueStr[0] && constStrRef3.size() == rvalueStr.size());
 
+    // 通过c风格字符串构造
+    char cstr[] = "hello";
+    const char constCStr[] = "hello";
+    vector_ref<char> cstrRef1(cstr);
+    // vector_ref<char> cstrRef2(constCStr);
+    vector_ref<const char> constCStrRef1(cstr);
+    vector_ref<const char> constCStrRef2(constCStr);
+    BOOST_CHECK(cstrRef1.data() == cstr && cstrRef1.size() == strlen(cstr));
+    BOOST_CHECK(constCStrRef1.data() == cstr && constCStrRef1.size() == strlen(cstr));
+    BOOST_CHECK(constCStrRef2.data() == constCStr && constCStrRef2.size() == strlen(constCStr));
+
     // 通过POD容器构造
     std::vector<int> vec = { 1, 2, 3 };
     const std::vector<int> constVec = { 1, 2, 3 };
