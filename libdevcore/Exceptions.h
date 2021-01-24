@@ -21,11 +21,11 @@ struct X : public std::runtime_error {\
     explicit X(const std::string& what_arg = "") : std::runtime_error(what_arg) {}\
 }
 
-// 异常类生成模板
-#define DEV_DERIVE_EXCEPTION(X, BASE)\
-struct X : public BASE {\
-    explicit X(const std::string& what_arg = "") : BASE(what_arg) {}\
-}
+// // 异常类生成模板
+// #define DEV_DERIVE_EXCEPTION(X, BASE)\
+// struct X : public BASE {\
+//     explicit X(const std::string& what_arg = "") : BASE(what_arg) {}\
+// }
 
 // 其它异常
 DEV_SIMPLE_EXCEPTION(OutOfRange);

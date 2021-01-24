@@ -19,6 +19,7 @@ include(CompilerSettings)
 # 下载安装依赖库
 include(ProjectBoost)
 include(ProjectJSONCPP)
+include(ProjectSnappy)
 
 # 添加子目录
 add_subdirectory(libdevcore)

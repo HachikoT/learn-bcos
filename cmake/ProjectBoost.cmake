@@ -8,7 +8,7 @@ if(CORES EQUAL 0)
   set(CORES 1)
 endif()
 
-# 仅下载依赖库
+# 下载构建安装依赖库
 ExternalProject_Add(
     # 项目名称
     boost

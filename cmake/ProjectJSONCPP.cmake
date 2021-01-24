@@ -2,7 +2,7 @@
 include(ExternalProject)
 include(GNUInstallDirs)
 
-# 下载安装依赖库
+# 下载构建安装依赖库
 ExternalProject_Add(
     # 项目名称
     jsoncpp
