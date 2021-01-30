@@ -21,11 +21,11 @@ struct X : public std::runtime_error {\
     explicit X(const std::string& what_arg = "") : std::runtime_error(what_arg) {}\
 }
 
-// // 异常类生成模板
-// #define DEV_DERIVE_EXCEPTION(X, BASE)\
-// struct X : public BASE {\
-//     explicit X(const std::string& what_arg = "") : BASE(what_arg) {}\
-// }
+// 异常类生成模板
+#define DEV_DERIVE_EXCEPTION(X, BASE)\
+struct X : public BASE {\
+    explicit X(const std::string& what_arg = "") : BASE(what_arg) {}\
+}
 
 // 其它异常
 DEV_SIMPLE_EXCEPTION(OutOfRange);
@@ -33,5 +33,13 @@ DEV_SIMPLE_EXCEPTION(BadHexCh);
 DEV_SIMPLE_EXCEPTION(BadBase64Ch);
 DEV_SIMPLE_EXCEPTION(Unaligned);
 DEV_SIMPLE_EXCEPTION(CorruptedInput);
+
+// RLP异常
+DEV_SIMPLE_EXCEPTION(RLPExcept);
+DEV_DERIVE_EXCEPTION(RLPItemTooLarge, RLPExcept);
+DEV_DERIVE_EXCEPTION(RLPIncompleteList, RLPExcept);
+DEV_DERIVE_EXCEPTION(BadRLP, RLPExcept);
+DEV_DERIVE_EXCEPTION(RLPBadCast, RLPExcept);
+DEV_DERIVE_EXCEPTION(RLPUnsupportedCast, RLPExcept);
 
 }   // namespace dev
