@@ -20,6 +20,7 @@ include(CompilerSettings)
 include(ProjectBoost)
 include(ProjectJSONCPP)
 include(ProjectSnappy)
+include(ProjectSECP256k1)
 
 # 添加子目录
 add_subdirectory(libdevcore)
