@@ -9,6 +9,7 @@ add_executable(test-${PROJECT_NAME} ${SRCS} ${HEADERS})
 target_link_libraries(test-${PROJECT_NAME} PUBLIC Boost::UnitTestFramework)
 target_link_libraries(test-${PROJECT_NAME} PUBLIC devcore)
 target_link_libraries(test-${PROJECT_NAME} PUBLIC crypto)
+target_link_libraries(test-${PROJECT_NAME} PUBLIC ethcore)
 
 # 添加测试目标
 add_test(NAME test-${PROJECT_NAME} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ./bin/test-${PROJECT_NAME})

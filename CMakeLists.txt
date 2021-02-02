@@ -25,6 +25,7 @@ include(ProjectSECP256k1)
 # 添加子目录
 add_subdirectory(libdevcore)
 add_subdirectory(libcrypto)
+add_subdirectory(libethcore)
 add_subdirectory(libconfig)
 add_subdirectory(${PROJECT_NAME})
 
