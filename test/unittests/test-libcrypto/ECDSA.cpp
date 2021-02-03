@@ -36,6 +36,11 @@ BOOST_AUTO_TEST_CASE(ecdsaTest)
     H256 digest = keccak256("hello");
     Signature sig = sign(sec, digest);
     BOOST_CHECK(pub == recover(sig, digest));
+
+    // 确保s<=c_secp256k1nHalf
+    sig.v ^= 0x01;
+    sig.s = H256(c_secp256k1n - sig.s.toArith());
+    BOOST_CHECK_THROW(recover(sig, digest), BadSignature);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
