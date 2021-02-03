@@ -35,54 +35,54 @@ static const secp256k1_context* getSECP256K1Ctx() {
 
 /**
  * 计算私钥对应的公钥
- * @param secKey 私钥（32字节）
+ * @param sec 私钥（32字节）
  * @return 对应的公钥（64字节）
  * @throw 若私钥非法则抛出BadSecKey异常
  */
-PubKey toPubKey(const SecKey& secKey) {
+PubKey toPubKey(const SecKey& sec) {
     // 获取上下文
     auto secp256k1Ctx = getSECP256K1Ctx();
 
     // 从私钥计算出原始公钥（64字节）
-    secp256k1_pubkey rawPubkey;
-    if (!secp256k1_ec_pubkey_create(secp256k1Ctx, &rawPubkey, secKey.data())) {
+    secp256k1_pubkey rawPub;
+    if (!secp256k1_ec_pubkey_create(secp256k1Ctx, &rawPub, sec.data())) {
         throw BadSecKey();
     }
 
     // 将原始公钥进行序列化（65字节！），原始公钥不能跨平台，跨版本使用，需要用先序列化
     // 多的一个字节用来标识公钥，0x04作为第一个标识字节，表示未压缩
-    std::array<Byte, 65> serializedPubkey;
-    size_t serializedPubkeySize = serializedPubkey.size();
+    std::array<Byte, 65> serializedPub;
+    size_t serializedPubSize = serializedPub.size();
     secp256k1_ec_pubkey_serialize(
         secp256k1Ctx,               // 上下文
-        serializedPubkey.data(),    // 序列化公钥的输出
-        &serializedPubkeySize,      // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
-        &rawPubkey,                 // 原始公钥
+        serializedPub.data(),    // 序列化公钥的输出
+        &serializedPubSize,      // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
+        &rawPub,                 // 原始公钥
         SECP256K1_EC_UNCOMPRESSED   // 不压缩占用65字节，压缩占用33字节
     );
 
     // 确保写入了65个字节
-    assert(serializedPubkey.size() == serializedPubkeySize);
+    assert(serializedPub.size() == serializedPubSize);
     // 确保第一个标识字节正确
-    assert(0x04 == serializedPubkey[0]);
+    assert(0x04 == serializedPub[0]);
 
-    return PubKey(BytesConstRef(&serializedPubkey[1], serializedPubkey.size() - 1));
+    return PubKey(BytesConstRef(&serializedPub[1], serializedPub.size() - 1));
 }
 
 /**
  * 用私钥对数字摘要进行签名
- * @param secKey 私钥
+ * @param sec 私钥
  * @param digest 数字摘要
  * @return 数字签名
  * @throw 签名错误抛出BadSignature异常
  */
-Signature sign(const SecKey& secKey, const H256& digest) {
+Signature sign(const SecKey& sec, const H256& digest) {
     // 获取上下文
     auto secp256k1Ctx = getSECP256K1Ctx();
 
     // 对数字摘要进行签名，获取原始签名信息
     secp256k1_ecdsa_recoverable_signature rawSig;
-    if (!secp256k1_ecdsa_sign_recoverable(secp256k1Ctx, &rawSig, digest.data(), secKey.data(), nullptr, nullptr)) {
+    if (!secp256k1_ecdsa_sign_recoverable(secp256k1Ctx, &rawSig, digest.data(), sec.data(), nullptr, nullptr)) {
         throw BadSignature();
     }
 
@@ -122,7 +122,7 @@ Signature sign(const SecKey& secKey, const H256& digest) {
 PubKey recover(const Signature& sig, const H256& digest) {
     // 对于secp256k1曲线而言，只有四种recoveryId，分别是0，1，2，3
     // 以太坊中直接忽略了recoveryId等于2和3的情况，因为概率很低，大约为3.73*10^-39
-    // 详见fisco-bsoc的博客 https://my.oschina.net/fiscobcos/blog/4384028
+    // 详见fisco-bcos的博客 https://my.oschina.net/fiscobcos/blog/4384028
     // 至于为什么忽略，我也不懂，可能是为了省id数吧，有知道的兄弟补充一下
     if (sig.v > 1) {
         throw BadSignature();
@@ -143,29 +143,29 @@ PubKey recover(const Signature& sig, const H256& digest) {
     }
 
     // 解析出原始公钥
-    secp256k1_pubkey rawPubkey;
-    if (!secp256k1_ecdsa_recover(secp256k1Ctx, &rawPubkey, &rawSig, digest.data())) {
+    secp256k1_pubkey rawPub;
+    if (!secp256k1_ecdsa_recover(secp256k1Ctx, &rawPub, &rawSig, digest.data())) {
         throw BadSignature();
     }
 
     // 将原始公钥进行序列化（65字节！）
     // 多的一个字节用来标识公钥，0x04作为第一个标识字节
-    std::array<Byte, 65> serializedPubkey;
-    size_t serializedPubkeySize = serializedPubkey.size();
+    std::array<Byte, 65> serializedPub;
+    size_t serializedPubSize = serializedPub.size();
     secp256k1_ec_pubkey_serialize(
         secp256k1Ctx,               // 上下文
-        serializedPubkey.data(),    // 序列化公钥的输出
-        &serializedPubkeySize,      // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
-        &rawPubkey,                 // 原始公钥
+        serializedPub.data(),    // 序列化公钥的输出
+        &serializedPubSize,      // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
+        &rawPub,                 // 原始公钥
         SECP256K1_EC_UNCOMPRESSED   // 不压缩占用65字节，压缩占用33字节
     );
 
     // 确保写入了65个字节
-    assert(serializedPubkey.size() == serializedPubkeySize);
+    assert(serializedPub.size() == serializedPubSize);
     // 确保第一个标识字节正确
-    assert(0x04 == serializedPubkey[0]);
+    assert(0x04 == serializedPub[0]);
 
-    return PubKey(BytesConstRef(&serializedPubkey[1], serializedPubkey.size() - 1));
+    return PubKey(BytesConstRef(&serializedPub[1], serializedPub.size() - 1));
 }
 
 }   // namespace dev

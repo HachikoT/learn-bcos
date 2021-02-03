@@ -10,7 +10,9 @@
  */
 #pragma once
 
+#include <libdevcore/Common.h>
 #include <libdevcore/FixedBytes.h>
+#include <libcrypto/ECDSA.h>
 
 namespace dev { namespace eth {
 
@@ -19,7 +21,7 @@ namespace dev { namespace eth {
  * 外部账户（Externally Owned Account, EOA）：链上用户的账户，由用户的私钥控制
  * 合约账户（Contract Account, CA）：部署智能合约产生的账户，由合约自身的代码控制
  * 账户地址计算规则：
- * 外部账户：EOA=right160(keccak256(toPublic(secp256k1_privateKey)))
+ * 外部账户：EOA=right160(keccak256(toPubKey(secp256k1_secKey)))
  * 合约账户：CA=right160(keccak256(rlp(msg.sender, msg.sender.nonce)))
  */
 
@@ -27,19 +29,10 @@ namespace dev { namespace eth {
 using Address = H160;
 using Addresses = H160s;
 
-// /**
-//  * 计算公钥对应的账户地址（计算公钥的keccak哈希值，再取哈希值的后160位作为账户地址）
-//  * @param pub 公钥（64字节）
-//  * @return 公钥对应的账户地址（20字节）
-//  */
-// inline Address toAddress(const Public& pub) noexcept { return right160(keccak(pub)); }
+// 计算外部账户地址
+Address toAddress(const PubKey& pub) noexcept;
 
-// /**
-//  * 计算合约账户地址
-//  * @param sender 发起创建合约交易的账户地址
-//  * @param nonce sender账户中记录的nonce值
-//  * @return 新创建的合约的账户地址
-//  */
-// inline Address toAddress(const Address& sender, const U256& nonce) { return right160(keccak(rlpList(sender, nonce))); }
+// 计算合约账户地址
+inline Address toAddress(const Address& sender, const U256& nonce);
 
 }}   // namespace dev::eth

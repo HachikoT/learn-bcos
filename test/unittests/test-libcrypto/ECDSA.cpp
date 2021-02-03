@@ -24,14 +24,18 @@ BOOST_AUTO_TEST_CASE(contextTest)
 BOOST_AUTO_TEST_CASE(ecdsaTest)
 {
     // 测试私钥转换为公钥
-    SecKey secKey("1f2b77e3a4b50120692912c94b204540ad44404386b10c615786a7efaa065d20");
-    PubKey pubKey = toPubKey(secKey);
-    BOOST_CHECK(pubKey.hex() == "dfa13518ff965498743f3a01439dd86bc34ff9969c7a3f0430bbf8865734252953c9884af787b2cadd45f92dff2b81e21cfdf98873e492e5fdc07e9eb67ca74d");
+    SecKey sec("1f2b77e3a4b50120692912c94b204540ad44404386b10c615786a7efaa065d20");
+    PubKey pub = toPubKey(sec);
+    BOOST_CHECK(pub.hex() == "dfa13518ff965498743f3a01439dd86bc34ff9969c7a3f0430bbf8865734252953c9884af787b2cadd45f92dff2b81e21cfdf98873e492e5fdc07e9eb67ca74d");
+
+    // 非法私钥
+    SecKey badSec;
+    BOOST_CHECK_THROW(toPubKey(badSec), BadSecKey);
 
     // 数字签名
     H256 digest = keccak256("hello");
-    Signature sig = sign(secKey, digest);
-    BOOST_CHECK(pubKey == recover(sig, digest));
+    Signature sig = sign(sec, digest);
+    BOOST_CHECK(pub == recover(sig, digest));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

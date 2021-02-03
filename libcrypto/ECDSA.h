@@ -52,20 +52,20 @@ extern const U256 c_secp256k1nHalf;
 
 /**
  * 计算私钥对应的公钥
- * @param secKey 私钥（32字节）
+ * @param sec 私钥（32字节）
  * @return 对应的公钥（64字节）
  * @throw 若私钥非法则抛出BadSecKey异常
  */
-PubKey toPubKey(const SecKey& secKey);
+PubKey toPubKey(const SecKey& sec);
 
 /**
  * 用私钥对数字摘要进行签名
- * @param secKey 私钥
+ * @param sec 私钥
  * @param digest 数字摘要
  * @return 数字签名
  * @throw 签名错误抛出BadSignature异常
  */
-Signature sign(const SecKey& secKey, const H256& digest);
+Signature sign(const SecKey& sec, const H256& digest);
 
 /**
  * 根据签名信息和被签名数据的数字摘要恢复出签名者公钥
