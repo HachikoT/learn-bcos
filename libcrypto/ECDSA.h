@@ -3,7 +3,7 @@
 // Licensed under the GNU General Public License, Version 3.
 
 /**
- * 常用类型，函数定义
+ * 椭圆曲线数字签名算法
  * @file: ECDSA.h
  * @author: rancheng <rc4work@163.com>
  * @date: 2021-02-02

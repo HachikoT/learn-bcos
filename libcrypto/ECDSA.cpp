@@ -3,7 +3,7 @@
 // Licensed under the GNU General Public License, Version 3.
 
 /**
- * 常用类型，函数定义
+ * 椭圆曲线数字签名算法
  * @file: ECDSA.cpp
  * @author: rancheng <rc4work@163.com>
  * @date: 2021-02-02
@@ -55,9 +55,9 @@ PubKey toPubKey(const SecKey& sec) {
     size_t serializedPubSize = serializedPub.size();
     secp256k1_ec_pubkey_serialize(
         secp256k1Ctx,               // 上下文
-        serializedPub.data(),    // 序列化公钥的输出
-        &serializedPubSize,      // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
-        &rawPub,                 // 原始公钥
+        serializedPub.data(),       // 序列化公钥的输出
+        &serializedPubSize,         // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
+        &rawPub,                    // 原始公钥
         SECP256K1_EC_UNCOMPRESSED   // 不压缩占用65字节，压缩占用33字节
     );
 
@@ -123,7 +123,7 @@ PubKey recover(const Signature& sig, const H256& digest) {
     // 对于secp256k1曲线而言，只有四种recoveryId，分别是0，1，2，3
     // 以太坊中直接忽略了recoveryId等于2和3的情况，因为概率很低，大约为3.73*10^-39
     // 详见fisco-bcos的博客 https://my.oschina.net/fiscobcos/blog/4384028
-    // 至于为什么忽略，我也不懂，可能是为了省id数吧，有知道的兄弟补充一下
+    // 至于为什么忽略，我也不懂，可能是为了省id数吧，有知道的可以补充一下
     if (sig.v > 1) {
         throw BadSignature();
     }
@@ -154,9 +154,9 @@ PubKey recover(const Signature& sig, const H256& digest) {
     size_t serializedPubSize = serializedPub.size();
     secp256k1_ec_pubkey_serialize(
         secp256k1Ctx,               // 上下文
-        serializedPub.data(),    // 序列化公钥的输出
-        &serializedPubSize,      // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
-        &rawPub,                 // 原始公钥
+        serializedPub.data(),       // 序列化公钥的输出
+        &serializedPubSize,         // 初始化为输出缓存区的长度，返回实际写入输出缓冲区的长度
+        &rawPub,                    // 原始公钥
         SECP256K1_EC_UNCOMPRESSED   // 不压缩占用65字节，压缩占用33字节
     );
 
