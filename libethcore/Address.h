@@ -33,6 +33,6 @@ using Addresses = H160s;
 Address toAddress(const PubKey& pub) noexcept;
 
 // 计算合约账户地址
-inline Address toAddress(const Address& sender, const U256& nonce);
+Address toAddress(const Address& sender, const U256& nonce);
 
 }}   // namespace dev::eth
